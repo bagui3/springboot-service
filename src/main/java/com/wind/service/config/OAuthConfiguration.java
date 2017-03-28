@@ -56,6 +56,11 @@ public class OAuthConfiguration extends ResourceServerConfigurerAdapter {
 		}, AbstractPreAuthenticatedProcessingFilter.class);
     	
 		http.csrf().disable();
-		http.authorizeRequests().anyRequest().authenticated();
+		http
+				.authorizeRequests()
+				.antMatchers("/").permitAll()
+				.antMatchers("/v2/**","/swagger**", "/druid/**").permitAll()
+				.antMatchers("/api/**").hasAuthority("user")
+				.anyRequest().authenticated();
     }
 }

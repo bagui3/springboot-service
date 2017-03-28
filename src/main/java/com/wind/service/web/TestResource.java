@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/")
 public class TestResource {
 
-	@PreAuthorize("hasRole('admin')")
 	@RequestMapping(value="/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public List<String> list() {
 		return Arrays.asList("Test", "Test", "Test", "Test");
 	}
 
-	@PreAuthorize("hasRole('user')")
 	@RequestMapping(value="/list2",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public List<String> list2() {
