@@ -18,10 +18,10 @@ public class ServiceMonitor {
 
     /**
      * A join point is in the service layer if the method is defined
-     * in a type in the com.shawn.service package or any sub-package
+     * in a type in the com.wind.service package or any sub-package
      * under that.
      */
-    @Pointcut("execution(* com.wind.service.service..*(..))")
+    @Pointcut("execution(* com.wind.service.web.*(..))")
     private void serviceLayer() {
     }
 
