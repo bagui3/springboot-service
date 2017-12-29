@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wind.service.mybatis.mapper.SignMapper" >
+  <resultMap id="BaseResultMap" type="com.wind.service.mybatis.pojo.Sign" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userid" jdbcType="BIGINT" />
+    <result column="sign_date" property="signDate" jdbcType="TIMESTAMP" />
+    <result column="succession" property="succession" jdbcType="INTEGER" />
+  </resultMap>
+</mapper>

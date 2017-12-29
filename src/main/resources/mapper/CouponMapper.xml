@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wind.service.mybatis.mapper.CouponMapper" >
+  <resultMap id="BaseResultMap" type="com.wind.service.mybatis.pojo.Coupon" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="denomination" property="denomination" jdbcType="INTEGER" />
+    <result column="source" property="source" jdbcType="INTEGER" />
+    <result column="valid_days" property="validDays" jdbcType="INTEGER" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="activity_start_time" property="activityStartTime" jdbcType="TIMESTAMP" />
+    <result column="activity_end_time" property="activityEndTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+</mapper>
