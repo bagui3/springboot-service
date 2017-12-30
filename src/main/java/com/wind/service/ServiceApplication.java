@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 
 @SpringBootApplication
 @EnableAuthorizationServer
-@MapperScan(basePackages = "com.wind.mybatis.mapper")
+@MapperScan(basePackages = "com.wind.service.mybatis.mapper")
 public class ServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ServiceApplication.class, args);

@@ -6,4 +6,6 @@ public final class Constant {
     public static final int PAGE_SIZE = 10;
 
     public static final String RESOURCE_LINE = "line";
+    public static final String RESOURCE_USER_TICKET = "user_ticket";
+    public static final String RESOURCE_USER = "user";
 }

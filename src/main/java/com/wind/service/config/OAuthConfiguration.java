@@ -61,6 +61,6 @@ public class OAuthConfiguration extends ResourceServerConfigurerAdapter {
 				.antMatchers("/").permitAll()
 				.antMatchers("/v2/**","/swagger**", "/druid/**").permitAll()
 				.antMatchers("/api/**").hasAuthority("user")
-				.anyRequest().authenticated();
+				.anyRequest().permitAll();
     }
 }

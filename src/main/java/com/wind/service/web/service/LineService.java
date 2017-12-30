@@ -29,12 +29,15 @@ public class LineService {
     }
 
     public List<Line> getAll(int page) {
+        Example example = new Example(Line.class);
+        example.setOrderByClause("id desc");
         PageHelper.startPage(page, Constant.PAGE_SIZE);
-        return lineMapper.selectAll();
+        return lineMapper.selectByExample(example);
     }
 
     public List<Line> getAll(String type, String value, int page) {
         Example example = new Example(Line.class);
+        example.setOrderByClause("id desc");
         Example.Criteria criteria = example.createCriteria();
         criteria.andLike(type, "%" + value + "%");
         PageHelper.startPage(page, Constant.PAGE_SIZE);

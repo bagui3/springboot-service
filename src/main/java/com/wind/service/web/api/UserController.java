@@ -3,8 +3,8 @@ package com.wind.service.web.api;
 import com.wind.service.common.Constant;
 import com.wind.service.common.PaginatedResult;
 import com.wind.service.exception.ResourceNotFoundException;
-import com.wind.service.mybatis.pojo.Line;
-import com.wind.service.web.service.LineService;
+import com.wind.service.mybatis.pojo.User;
+import com.wind.service.web.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,24 +16,24 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/line")
-public class LineController {
+@RequestMapping("/user")
+public class UserController {
 
     @Autowired
-    private LineService lineService;
+    private UserService userService;
 
-    @ApiOperation(value = "获取线路详情")
+    @ApiOperation(value = "获取乘客详情")
     @GetMapping("/{id}")
-    public ResponseEntity<?> getLineById(@PathVariable Long id) {
-        return lineService
-                .getLineByID(id)
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        return userService
+                .getUserByID(id)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResourceNotFoundException()
-                        .setResourceName(Constant.RESOURCE_LINE)
+                        .setResourceName(Constant.RESOURCE_USER)
                         .setId(id));
     }
 
-    @ApiOperation(value = "获取线路列表")
+    @ApiOperation(value = "获取乘客列表")
     @GetMapping("/all/{page}")
     public ResponseEntity<?> search(
             @RequestParam(value = "type", required = false, defaultValue = "") String type,
@@ -42,26 +42,26 @@ public class LineController {
         if ("".equals(type)) {
             return ResponseEntity
                     .ok(new PaginatedResult()
-                            .setData(lineService.getAll(page))
+                            .setData(userService.getAll(page))
                             .setCurrentPage(page)
-                            .setCount(lineService.getCount()));
+                            .setCount(userService.getCount()));
         } else {
-            assert ("name".equals(type) || "start".equals(type) || "end".equals(type));
+            assert ("name".equals(type) || "phone".equals(type) || "recommendPhone".equals(type));
             return ResponseEntity
                     .ok(new PaginatedResult()
-                            .setData(lineService.getAll(type, value, page))
+                            .setData(userService.getAll(type, value, page))
                             .setCurrentPage(page)
-                            .setCount(lineService.getCount(type, value)));
+                            .setCount(userService.getCount(type, value)));
         }
     }
 
-    @ApiOperation(value = "新增线路")
+    @ApiOperation(value = "新增乘客")
     @PostMapping
-    public ResponseEntity<?> postLine(@RequestBody Line instance) {
-        Optional<Line> result = lineService.getLineByName(instance.getName());
+    public ResponseEntity<?> postUser(@RequestBody User instance) {
+        Optional<User> result = userService.getUserByName(instance.getName());
 
         if (!result.isPresent()) {
-            lineService.addLine(instance);
+            userService.addUser(instance);
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
@@ -73,22 +73,22 @@ public class LineController {
         }
     }
 
-    @ApiOperation(value = "修改线路")
+    @ApiOperation(value = "修改乘客")
     @PutMapping
-    public ResponseEntity<?> putLine(@RequestBody Line Line) {
-        assertLineExist(Line.getId());
+    public ResponseEntity<?> putUser(@RequestBody User User) {
+        assertUserExist(User.getId());
 
-        lineService.modifyLineById(Line);
+        userService.modifyUserById(User);
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(Line);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(User);
     }
 
-    @ApiOperation(value = "删除线路")
+    @ApiOperation(value = "删除乘客")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteLine(@PathVariable Long id) {
-        assertLineExist(id);
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        assertUserExist(id);
 
-        boolean result = lineService.deleteLineById(id);
+        boolean result = userService.deleteUserById(id);
 
         if (result)
             return ResponseEntity.accepted().build();
@@ -97,9 +97,9 @@ public class LineController {
 
     }
 
-    private void assertLineExist(Long id) {
-        lineService
-                .getLineByID(id)
+    private void assertUserExist(Long id) {
+        userService
+                .getUserByID(id)
                 .orElseThrow(() -> new ResourceNotFoundException()
                         .setResourceName(Constant.RESOURCE_LINE)
                         .setId(id));
