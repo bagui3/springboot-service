@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,9 @@ public class LineService {
         PageHelper.startPage(page, Constant.PAGE_SIZE);
         return lineMapper.selectByExample(example);
     }
+    public List<Line> getAll(String ids) {
+        return lineMapper.selectByIds(ids);
+    }
 
     public List<Line> getAll(String type, String value, int page) {
         Example example = new Example(Line.class);
@@ -57,6 +61,19 @@ public class LineService {
         return count;
     }
 
+    public List<Long> searchIds(String type, String value) {
+        Example example = new Example(Line.class);
+        example.setOrderByClause("id desc");
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andLike(type, "%" + value + "%");
+        List<Line> list = lineMapper.selectByExample(example);
+        List<Long> ids = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            ids.add(list.get(i).getId());
+        }
+        return ids;
+    }
+
     @Transactional
     public boolean addLine(Line Line) {
         return lineMapper.insertUseGeneratedKeys(Line) > 0;
@@ -64,7 +81,6 @@ public class LineService {
 
     @Transactional
     public boolean modifyLineById(Line Line) {
-        Line original = lineMapper.selectByPrimaryKey(Line);
         return lineMapper.updateByPrimaryKey(Line) > 0;
     }
 

@@ -45,13 +45,14 @@ public class LineController {
                             .setData(lineService.getAll(page))
                             .setCurrentPage(page)
                             .setCount(lineService.getCount()));
-        } else {
-            assert ("name".equals(type) || "start".equals(type) || "end".equals(type));
+        } else if ("name".equals(type) || "start".equals(type) || "end".equals(type)) {
             return ResponseEntity
                     .ok(new PaginatedResult()
                             .setData(lineService.getAll(type, value, page))
                             .setCurrentPage(page)
                             .setCount(lineService.getCount(type, value)));
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 

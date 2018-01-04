@@ -33,7 +33,20 @@ public class UserTicketService {
         Example example = new Example(UserTicket.class);
         example.setOrderByClause("id desc");
         Example.Criteria criteria = example.createCriteria();
-        criteria.andLike(type, "%" + value + "%");
+        if (type.toLowerCase().contains("id")) {
+            criteria.andEqualTo(Long.valueOf(value));
+        } else {
+            criteria.andLike(type, "%" + value + "%");
+        }
+        PageHelper.startPage(page, Constant.PAGE_SIZE);
+        return userTicketMapper.selectByExample(example);
+    }
+
+    public List<UserTicket> getAll(String type, List<Long> value, int page) {
+        Example example = new Example(UserTicket.class);
+        example.setOrderByClause("id desc");
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn(type, value);
         PageHelper.startPage(page, Constant.PAGE_SIZE);
         return userTicketMapper.selectByExample(example);
     }
@@ -51,6 +64,36 @@ public class UserTicketService {
         return count;
     }
 
+    public int getCount(String type, List<Long> value) {
+        Example example = new Example(UserTicket.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn(type, value);
+        int count = userTicketMapper.selectCountByExample(example);
+        return count;
+    }
+
+    public String getUserIds(List<UserTicket> list) {
+        String ids = "";
+        for (int index = 0; index < list.size(); index++) {
+            ids += list.get(index).getUserId().toString();
+            if (index != list.size() - 1) {
+                ids += ",";
+            }
+        }
+        return ids;
+    }
+
+    public String getLineIds(List<UserTicket> list) {
+        String ids = "";
+        for (int index = 0; index < list.size(); index++) {
+            ids += list.get(index).getLineId().toString();
+            if (index != list.size() - 1) {
+                ids += ",";
+            }
+        }
+        return ids;
+    }
+
     @Transactional
     public boolean addUserTicket(UserTicket UserTicket) {
         return userTicketMapper.insertUseGeneratedKeys(UserTicket) > 0;
@@ -58,7 +101,6 @@ public class UserTicketService {
 
     @Transactional
     public boolean modifyUserTicketById(UserTicket UserTicket) {
-        UserTicket original = userTicketMapper.selectByPrimaryKey(UserTicket);
         return userTicketMapper.updateByPrimaryKey(UserTicket) > 0;
     }
 

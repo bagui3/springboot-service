@@ -45,14 +45,18 @@ public class UserController {
                             .setData(userService.getAll(page))
                             .setCurrentPage(page)
                             .setCount(userService.getCount()));
-        } else {
-            assert ("name".equals(type) || "phone".equals(type) || "recommendPhone".equals(type));
+        } else if ("name".equals(type) || "phone".equals(type) || "recommendPhone".equals(type)) {
             return ResponseEntity
                     .ok(new PaginatedResult()
                             .setData(userService.getAll(type, value, page))
                             .setCurrentPage(page)
                             .setCount(userService.getCount(type, value)));
+
+        } else {
+            return ResponseEntity.notFound().build();
         }
+
+
     }
 
     @ApiOperation(value = "新增乘客")
@@ -101,7 +105,7 @@ public class UserController {
         userService
                 .getUserByID(id)
                 .orElseThrow(() -> new ResourceNotFoundException()
-                        .setResourceName(Constant.RESOURCE_LINE)
+                        .setResourceName(Constant.RESOURCE_USER)
                         .setId(id));
     }
 }

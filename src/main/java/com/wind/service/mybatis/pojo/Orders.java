@@ -15,7 +15,6 @@ public class Orders {
     /**
      * 商户平台订单编号
      */
-    @Id
     @Column(name = "trade_no")
     private String tradeNo;
 

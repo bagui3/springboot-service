@@ -12,7 +12,6 @@ public class ConversionRecord {
     /**
      * 兑换码使用的时间
      */
-    @Id
     private Date time;
 
     /**
