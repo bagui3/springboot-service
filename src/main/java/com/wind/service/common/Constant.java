@@ -9,4 +9,5 @@ public final class Constant {
     public static final String RESOURCE_USER_TICKET = "user_ticket";
     public static final String RESOURCE_USER = "user";
     public static final String RESOURCE_ORDER = "order";
+    public static final String RESOURCE_POINT_RECORD = "point_record";
 }
