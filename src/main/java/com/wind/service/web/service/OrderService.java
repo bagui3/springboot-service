@@ -2,8 +2,8 @@ package com.wind.service.web.service;
 
 import com.github.pagehelper.PageHelper;
 import com.wind.service.common.Constant;
-import com.wind.service.mybatis.mapper.UserTicketMapper;
-import com.wind.service.mybatis.pojo.UserTicket;
+import com.wind.service.mybatis.mapper.OrdersMapper;
+import com.wind.service.mybatis.pojo.Orders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,24 +13,24 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserTicketService {
+public class OrderService {
 
     @Autowired
-    UserTicketMapper userTicketMapper;
+    OrdersMapper ordersMapper;
 
-    public Optional<UserTicket> getUserTicketByID(Long id) {
-        return Optional.ofNullable(userTicketMapper.selectByPrimaryKey(id));
+    public Optional<Orders> getOrdersByID(Long id) {
+        return Optional.ofNullable(ordersMapper.selectByPrimaryKey(id));
     }
 
-    public List<UserTicket> getAll(int page) {
-        Example example = new Example(UserTicket.class);
+    public List<Orders> getAll(int page) {
+        Example example = new Example(Orders.class);
         example.setOrderByClause("id desc");
         PageHelper.startPage(page, Constant.PAGE_SIZE);
-        return userTicketMapper.selectByExample(example);
+        return ordersMapper.selectByExample(example);
     }
 
-    public List<UserTicket> getAll(String type, String value, int page) {
-        Example example = new Example(UserTicket.class);
+    public List<Orders> getAll(String type, String value, int page) {
+        Example example = new Example(Orders.class);
         example.setOrderByClause("id desc");
         Example.Criteria criteria = example.createCriteria();
         if (type.toLowerCase().contains("id")) {
@@ -39,44 +39,44 @@ public class UserTicketService {
             criteria.andLike(type, "%" + value + "%");
         }
         PageHelper.startPage(page, Constant.PAGE_SIZE);
-        return userTicketMapper.selectByExample(example);
+        return ordersMapper.selectByExample(example);
     }
 
-    public List<UserTicket> getAll(String type, List<Long> value, int page) {
-        Example example = new Example(UserTicket.class);
+    public List<Orders> getAll(String type, List<Long> value, int page) {
+        Example example = new Example(Orders.class);
         example.setOrderByClause("id desc");
         Example.Criteria criteria = example.createCriteria();
         criteria.andIn(type, value);
         PageHelper.startPage(page, Constant.PAGE_SIZE);
-        return userTicketMapper.selectByExample(example);
+        return ordersMapper.selectByExample(example);
     }
 
     public int getCount() {
-        int count = userTicketMapper.selectCount(new UserTicket());
+        int count = ordersMapper.selectCount(new Orders());
         return count;
     }
 
     public int getCount(String type, String value) {
-        Example example = new Example(UserTicket.class);
+        Example example = new Example(Orders.class);
         Example.Criteria criteria = example.createCriteria();
         if (type.toLowerCase().contains("id")) {
             criteria.andEqualTo(Long.valueOf(value));
         } else {
             criteria.andLike(type, "%" + value + "%");
         }
-        int count = userTicketMapper.selectCountByExample(example);
+        int count = ordersMapper.selectCountByExample(example);
         return count;
     }
 
     public int getCount(String type, List<Long> value) {
-        Example example = new Example(UserTicket.class);
+        Example example = new Example(Orders.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andIn(type, value);
-        int count = userTicketMapper.selectCountByExample(example);
+        int count = ordersMapper.selectCountByExample(example);
         return count;
     }
 
-    public String getUserIds(List<UserTicket> list) {
+    public String getUserIds(List<Orders> list) {
         String ids = "";
         for (int index = 0; index < list.size(); index++) {
             ids += list.get(index).getUserId().toString();
@@ -87,29 +87,18 @@ public class UserTicketService {
         return ids;
     }
 
-    public String getLineIds(List<UserTicket> list) {
-        String ids = "";
-        for (int index = 0; index < list.size(); index++) {
-            ids += list.get(index).getLineId().toString();
-            if (index != list.size() - 1) {
-                ids += ",";
-            }
-        }
-        return ids;
+    @Transactional
+    public boolean addOrders(Orders Orders) {
+        return ordersMapper.insertUseGeneratedKeys(Orders) > 0;
     }
 
     @Transactional
-    public boolean addUserTicket(UserTicket UserTicket) {
-        return userTicketMapper.insertUseGeneratedKeys(UserTicket) > 0;
+    public boolean modifyOrdersById(Orders Orders) {
+        return ordersMapper.updateByPrimaryKey(Orders) > 0;
     }
 
     @Transactional
-    public boolean modifyUserTicketById(UserTicket UserTicket) {
-        return userTicketMapper.updateByPrimaryKey(UserTicket) > 0;
-    }
-
-    @Transactional
-    public boolean deleteUserTicketById(Long id) {
-        return userTicketMapper.deleteByPrimaryKey(id) > 0;
+    public boolean deleteOrdersById(Long id) {
+        return ordersMapper.deleteByPrimaryKey(id) > 0;
     }
 }
