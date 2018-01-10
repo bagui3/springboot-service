@@ -31,7 +31,7 @@ public class OAuthConfiguration extends ResourceServerConfigurerAdapter {
        	RemoteTokenServices tokenService = new RemoteTokenServices();
         tokenService.setClientId("client");
         tokenService.setClientSecret("security");
-        tokenService.setCheckTokenEndpointUrl("http://localhost:8080/oauth/check_token");
+        tokenService.setCheckTokenEndpointUrl("http://localhost:8000/oauth/check_token");
         
         resources.tokenServices(tokenService);
     }
@@ -61,6 +61,6 @@ public class OAuthConfiguration extends ResourceServerConfigurerAdapter {
 				.antMatchers("/").permitAll()
 				.antMatchers("/v2/**","/swagger**", "/druid/**").permitAll()
 				.antMatchers("/api/**").hasAuthority("user")
-				.anyRequest().authenticated();
+				.anyRequest().permitAll();
     }
 }
