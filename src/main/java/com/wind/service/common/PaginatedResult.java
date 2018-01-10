@@ -11,6 +11,6 @@ import java.io.Serializable;
 @ToString
 public class PaginatedResult implements Serializable {
     private int currentPage; // Current page number
-    private int totalPage; // Number of total pages
+    private int count; // Number of total result
     private Object data; // Paginated resources
 }
