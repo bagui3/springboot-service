@@ -43,7 +43,7 @@ public class Orders {
     private Long productId;
 
     /**
-     * 产品类型 1-商品 2-活动
+     * 产品类型 1-商品 2-活动3-车票
      */
     @Column(name = "product_type")
     private Integer productType;
@@ -90,6 +90,11 @@ public class Orders {
      */
     @Column(name = "modify_time")
     private Date modifyTime;
+
+    /**
+     * 附加参数
+     */
+    private String ext;
 
     /**
      * 获取id
@@ -200,18 +205,18 @@ public class Orders {
     }
 
     /**
-     * 获取产品类型 1-商品 2-活动
+     * 获取产品类型 1-商品 2-活动3-车票
      *
-     * @return product_type - 产品类型 1-商品 2-活动
+     * @return product_type - 产品类型 1-商品 2-活动3-车票
      */
     public Integer getProductType() {
         return productType;
     }
 
     /**
-     * 设置产品类型 1-商品 2-活动
+     * 设置产品类型 1-商品 2-活动3-车票
      *
-     * @param productType 产品类型 1-商品 2-活动
+     * @param productType 产品类型 1-商品 2-活动3-车票
      */
     public void setProductType(Integer productType) {
         this.productType = productType;
@@ -359,5 +364,23 @@ public class Orders {
      */
     public void setModifyTime(Date modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    /**
+     * 获取附加参数
+     *
+     * @return ext - 附加参数
+     */
+    public String getExt() {
+        return ext;
+    }
+
+    /**
+     * 设置附加参数
+     *
+     * @param ext 附加参数
+     */
+    public void setExt(String ext) {
+        this.ext = ext;
     }
 }

@@ -6,6 +6,7 @@ import com.wind.service.exception.ResourceNotFoundException;
 import com.wind.service.mybatis.pojo.Line;
 import com.wind.service.mybatis.pojo.User;
 import com.wind.service.mybatis.pojo.UserTicket;
+import com.wind.service.web.BaseController;
 import com.wind.service.web.service.LineService;
 import com.wind.service.web.service.UserService;
 import com.wind.service.web.service.UserTicketService;
@@ -29,10 +30,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/user_ticket")
-public class UserTicketController {
+public class UserTicketController extends BaseController<UserTicket> {
 
     @Autowired
-    private UserTicketService userTicketService;
+    public void setBaseService(UserTicketService service) {
+        setService(service);
+    }
 
     @Autowired
     private UserService userService;
@@ -40,131 +43,58 @@ public class UserTicketController {
     @Autowired
     private LineService lineService;
 
-    @ApiOperation(value = "获取乘车记录详情")
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserTicketById(@PathVariable Long id) {
-        return userTicketService
-                .getUserTicketByID(id)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException()
-                        .setResourceName(Constant.RESOURCE_USER_TICKET)
-                        .setId(id));
-    }
-
-    @ApiOperation(value = "获取乘车记录列表")
+    @ApiOperation(value = "分页查询乘车记录")
     @GetMapping("/all/{page}")
     public ResponseEntity<?> search(
             @RequestParam(value = "type", required = false, defaultValue = "") String type,
             @RequestParam(value = "value", required = false, defaultValue = "") String value,
-            @PathVariable int page) {
+            @PathVariable int page) throws Exception {
+        int count;
+        List<UserTicket> list;
+        List<User> userList;
+        List<Long> userIds;
+        List<Long> lineIds;
+        List<Line> lineList;
         if ("".equals(type)) {
-            List<UserTicket> list = userTicketService.getAll(page);
-            Pair<List<User>, List<Line>> dic = getDic(list);
-            return ResponseEntity
-                    .ok(new PaginatedUserTicketResult()
-                            .setUserList(dic.getValue0())
-                            .setLineList(dic.getValue1())
-                            .setData(list)
-                            .setCurrentPage(page)
-                            .setCount(userTicketService.getCount()));
-        } else if ("phone".equals(type) || "name".equals(type) || "start".equals(type) || "end".equals(type)) {
-            List<Long> ids = new ArrayList<>();
-            List<UserTicket> list = new ArrayList<>();
-            int count = 0;
-            switch (type){
-                case "phone":
-                    ids = userService.searchIds("phone", value);
-                    list = userTicketService.getAll("userId", ids, page);
-                    count = userTicketService.getCount("userId", ids);
-                    break;
-                case "name":
-                    ids = userService.searchIds("name", value);
-                    list = userTicketService.getAll("userId", ids, page);
-                    count = userTicketService.getCount("userId", ids);
-                    break;
-                case "start":
-                    ids = lineService.searchIds("start", value);
-                    list = userTicketService.getAll("lineId", ids, page);
-                    count = userTicketService.getCount("lineId", ids);
-                    break;
-                case "end":
-                    ids = lineService.searchIds("end", value);
-                    list = userTicketService.getAll("lineId", ids, page);
-                    count = userTicketService.getCount("lineId", ids);
-                    break;
-            }
-            Pair<List<User>, List<Line>> dic = getDic(list);
-            return ResponseEntity
-                    .ok(new PaginatedUserTicketResult()
-                            .setUserList(dic.getValue0())
-                            .setLineList(dic.getValue1())
-                            .setData(list)
-                            .setCurrentPage(page)
-                            .setCount(count));
+            list = getService().selectAll(page);
+            count = getService().getCount();
+            lineIds = getService().getRelatedIds(list, "lineId");
+            lineList = lineService.selectAll(lineIds);
+            userIds = getService().getRelatedIds(list, "userId");
+            userList = userService.selectAll(userIds);
         } else {
-            return ResponseEntity.notFound().build();
+            if (type.equals("phone") || type.equals("name")) {
+                userList = userService.selectAll(type, value);
+                userIds = userService.getIds(userList);
+                list = getService().selectAll("userId", userIds, page);
+                count = getService().getCount("userId", userIds);
+                lineIds = getService().getRelatedIds(list, "lineId");
+                lineList = lineService.selectAll(lineIds);
+            } else if (type.equals("start") || type.equals("end")) {
+                lineList = lineService.selectAll(type, value);
+                lineIds = lineService.getIds(lineList);
+                list = getService().selectAll("lineId", lineIds, page);
+                count = getService().getCount("lineId", lineIds);
+                userIds = getService().getRelatedIds(list, "userId");
+                userList = userService.selectAll(userIds);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
         }
-    }
-
-    @ApiOperation(value = "新增乘车记录")
-    @PostMapping
-    public ResponseEntity<?> postUserTicket(@RequestBody UserTicket instance) {
-        userTicketService.addUserTicket(instance);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(instance.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(instance);
-    }
-
-    @ApiOperation(value = "修改乘车记录")
-    @PutMapping
-    public ResponseEntity<?> putUserTicket(@RequestBody UserTicket UserTicket) {
-        assertUserTicketExist(UserTicket.getId());
-
-        userTicketService.modifyUserTicketById(UserTicket);
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(UserTicket);
-    }
-
-    @ApiOperation(value = "删除乘车记录")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUserTicket(@PathVariable Long id) {
-        assertUserTicketExist(id);
-
-        boolean result = userTicketService.deleteUserTicketById(id);
-
-        if (result)
-            return ResponseEntity.accepted().build();
-        else
-            return ResponseEntity.notFound().build();
-
-    }
-
-    private void assertUserTicketExist(Long id) {
-        userTicketService
-                .getUserTicketByID(id)
-                .orElseThrow(() -> new ResourceNotFoundException()
-                        .setResourceName(Constant.RESOURCE_USER_TICKET)
-                        .setId(id));
-    }
-
-    private Pair<List<User>, List<Line>> getDic(List<UserTicket> list){
-        List<User> userList = new ArrayList<>();
-        List<Line> lineList = new ArrayList<>();
-        if (list.size() > 0) {
-            userList = userService.getAll(userTicketService.getUserIds(list));
-            lineList = lineService.getAll(userTicketService.getLineIds(list));
-        }
-        return new Pair<>(userList, lineList);
+        return ResponseEntity
+                .ok(new UserTicketController.NestedPaginatedResult()
+                        .setUserList(userList)
+                        .setLineList(lineList)
+                        .setData(list)
+                        .setCurrentPage(page)
+                        .setCount(count));
     }
 
     @Accessors(chain = true)
     @NoArgsConstructor
     @Data
     @ToString
-    public class PaginatedUserTicketResult extends PaginatedResult {
+    public class NestedPaginatedResult extends PaginatedResult {
         private Object userList;
         private Object lineList;
     }

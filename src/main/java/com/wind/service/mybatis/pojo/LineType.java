@@ -33,6 +33,9 @@ public class LineType {
      */
     private String site;
 
+    /**
+     * 0-尚未开通 1-敬请期待 2-已开通
+     */
     private Integer state;
 
     /**
@@ -140,14 +143,18 @@ public class LineType {
     }
 
     /**
-     * @return state
+     * 获取0-尚未开通 1-敬请期待 2-已开通
+     *
+     * @return state - 0-尚未开通 1-敬请期待 2-已开通
      */
     public Integer getState() {
         return state;
     }
 
     /**
-     * @param state
+     * 设置0-尚未开通 1-敬请期待 2-已开通
+     *
+     * @param state 0-尚未开通 1-敬请期待 2-已开通
      */
     public void setState(Integer state) {
         this.state = state;

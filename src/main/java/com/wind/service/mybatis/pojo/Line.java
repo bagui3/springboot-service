@@ -85,6 +85,21 @@ public class Line {
      */
     private String site;
 
+    /**
+     * 买票上车
+     */
+    @Column(name = "pre_pay")
+    private Boolean prePay;
+
+    /**
+     * 座位数量
+     */
+    @Column(name = "sit_num")
+    private Integer sitNum;
+
+    /**
+     * 0-尚未开通 1-敬请期待 2-已开通
+     */
     private Integer state;
 
     /**
@@ -354,14 +369,54 @@ public class Line {
     }
 
     /**
-     * @return state
+     * 获取买票上车
+     *
+     * @return pre_pay - 买票上车
+     */
+    public Boolean getPrePay() {
+        return prePay;
+    }
+
+    /**
+     * 设置买票上车
+     *
+     * @param prePay 买票上车
+     */
+    public void setPrePay(Boolean prePay) {
+        this.prePay = prePay;
+    }
+
+    /**
+     * 获取座位数量
+     *
+     * @return sit_num - 座位数量
+     */
+    public Integer getSitNum() {
+        return sitNum;
+    }
+
+    /**
+     * 设置座位数量
+     *
+     * @param sitNum 座位数量
+     */
+    public void setSitNum(Integer sitNum) {
+        this.sitNum = sitNum;
+    }
+
+    /**
+     * 获取0-尚未开通 1-敬请期待 2-已开通
+     *
+     * @return state - 0-尚未开通 1-敬请期待 2-已开通
      */
     public Integer getState() {
         return state;
     }
 
     /**
-     * @param state
+     * 设置0-尚未开通 1-敬请期待 2-已开通
+     *
+     * @param state 0-尚未开通 1-敬请期待 2-已开通
      */
     public void setState(Integer state) {
         this.state = state;

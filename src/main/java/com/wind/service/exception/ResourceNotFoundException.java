@@ -7,12 +7,10 @@ import lombok.experimental.Accessors;
 @Setter
 public class ResourceNotFoundException extends RuntimeException {
 
-    private String resourceName;
     private Long id;
 
     @Override
     public String getMessage() {
-        return resourceName + " with id " + id + " is not found.";
+        return "id " + id + " is not found.";
     }
-
 }
