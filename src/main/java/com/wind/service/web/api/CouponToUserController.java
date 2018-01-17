@@ -24,7 +24,7 @@ public class CouponToUserController extends ExtendController<CouponToUser> {
             @PathVariable int page) throws Exception {
         QueryResult result = unionQueryUser(type, value, page, "userId");
         return ResponseEntity
-                .ok(new CouponToUserController.NestedPaginatedResult()
+                .ok(new NestedPaginatedResult()
                         .setUserList(result.getUserList())
                         .setData(result.getList())
                         .setCurrentPage(page)

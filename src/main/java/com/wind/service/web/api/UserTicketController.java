@@ -24,7 +24,7 @@ public class UserTicketController extends ExtendController<UserTicket> {
             @PathVariable int page) throws Exception {
         QueryResult result = unionQueryUserAndLine(type, value, page, "userId","lineId");
         return ResponseEntity
-                .ok(new UserTicketController.NestedPaginatedResult()
+                .ok(new NestedPaginatedResult()
                         .setUserList(result.getUserList())
                         .setLineList(result.getLineList())
                         .setData(result.getList())

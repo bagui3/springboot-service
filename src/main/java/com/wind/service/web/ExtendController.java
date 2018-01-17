@@ -67,8 +67,21 @@ public class ExtendController<T> extends BaseController<T> {
                 result.setCount(service.getCount(columnLine, ids));
                 ids = service.getRelatedIds(result.getList(), columnUser);
                 result.setUserList(userService.selectAll(ids));
+            } else {
+                result = query(type, value, page, columnUser);
+                result.setUserList(userService.selectAll(result.getIds()));
+                List<Long> ids = service.getRelatedIds(result.getList(), columnLine);
+                result.setLineList(lineService.selectAll(ids));
             }
         }
+        return result;
+    }
+
+    private QueryResult query(String type, String value, int page, String column) throws Exception {
+        QueryResult result = new QueryResult();
+        result.setList(service.selectAll(type, value, page));
+        result.setCount(service.getCount(type, value));
+        result.setIds(service.getRelatedIds(result.getList(), column));
         return result;
     }
 

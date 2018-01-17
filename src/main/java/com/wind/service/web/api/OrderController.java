@@ -24,7 +24,7 @@ public class OrderController extends ExtendController<Orders> {
             @PathVariable int page) throws Exception{
         QueryResult result = unionQueryUser(type, value, page, "userId");
         return ResponseEntity
-                .ok(new OrderController.NestedPaginatedResult()
+                .ok(new NestedPaginatedResult()
                         .setUserList(result.getUserList())
                         .setData(result.getList())
                         .setCurrentPage(page)
