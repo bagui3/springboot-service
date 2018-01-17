@@ -63,7 +63,11 @@ public abstract class BaseService<T> {
                 ids += ",";
             }
         }
-        return mapper.selectByIds(ids);
+        if ("".equals(ids)) {
+            return new ArrayList<>();
+        } else {
+            return mapper.selectByIds(ids);
+        }
     }
 
     /**
@@ -80,9 +84,9 @@ public abstract class BaseService<T> {
     }
 
     /**
-     * 根据查询参数(字符型)和页数获取实例列表
+     * 根据字段(字符型)和页数获取实例列表
      *
-     * @param type  查询类别
+     * @param type  字段
      * @param value 查询参数(字符型)
      * @param page  页数
      * @return 实例列表
@@ -91,7 +95,7 @@ public abstract class BaseService<T> {
         Example example = new Example(getActualClass());
         example.setOrderByClause("id desc");
         Example.Criteria criteria = example.createCriteria();
-        if (type.toLowerCase().contains("id")) {
+        if (type.toLowerCase().endsWith("id")) {
             criteria.andEqualTo(Long.valueOf(value));
         } else {
             criteria.andLike(type, "%" + value + "%");
@@ -101,9 +105,9 @@ public abstract class BaseService<T> {
     }
 
     /**
-     * 根据查询参数(字符型)获取实例列表
+     * 根据字段(字符型)获取实例列表
      *
-     * @param type  查询类别
+     * @param type 字段
      * @param value 查询参数(字符型)
      * @return 实例列表
      */
@@ -120,35 +124,43 @@ public abstract class BaseService<T> {
     }
 
     /**
-     * 根据查询参数(ID型)和页数获取实例列表
+     * 根据字段(ID列表)和页数获取实例列表
      *
-     * @param type  查询类别
-     * @param value 查询参数(ID型)
-     * @param page  页数
+     * @param type 字段
+     * @param ids  ID列表
+     * @param page 页数
      * @return 实例列表
      */
-    public List<T> selectAll(String type, List<Long> value, int page) {
-        Example example = new Example(getActualClass());
-        example.setOrderByClause("id desc");
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andIn(type, value);
-        PageHelper.startPage(page, Constant.PAGE_SIZE);
-        return mapper.selectByExample(example);
+    public List<T> selectAll(String type, List<Long> ids, int page) {
+        if (ids.isEmpty()) {
+            return new ArrayList<>();
+        } else {
+            Example example = new Example(getActualClass());
+            example.setOrderByClause("id desc");
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andIn(type, ids);
+            PageHelper.startPage(page, Constant.PAGE_SIZE);
+            return mapper.selectByExample(example);
+        }
     }
 
     /**
-     * 根据查询参数(ID型)获取实例列表
+     * 根据字段(ID列表)获取实例列表
      *
-     * @param type  查询类别
-     * @param value 查询参数(ID型)
+     * @param type 字段
+     * @param ids  ID列表
      * @return 实例列表
      */
-    public List<T> selectAll(String type, List<Long> value) {
-        Example example = new Example(getActualClass());
-        example.setOrderByClause("id desc");
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andIn(type, value);
-        return mapper.selectByExample(example);
+    public List<T> selectAll(String type, List<Long> ids) {
+        if (ids.isEmpty()) {
+            return new ArrayList<>();
+        } else {
+            Example example = new Example(getActualClass());
+            example.setOrderByClause("id desc");
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andIn(type, ids);
+            return mapper.selectByExample(example);
+        }
     }
 
     /**
@@ -164,16 +176,16 @@ public abstract class BaseService<T> {
     }
 
     /**
-     * 限定查询参数(字符型)获取实例总数
+     * 根据字段(字符型)获取实例总数
      *
-     * @param type  查询类别
+     * @param type  字段
      * @param value 查询参数(字符型)
      * @return 实例总数
      */
     public int getCount(String type, String value) {
         Example example = new Example(getActualClass());
         Example.Criteria criteria = example.createCriteria();
-        if (type.toLowerCase().contains("id")) {
+        if (type.toLowerCase().endsWith("id")) {
             criteria.andEqualTo(Long.valueOf(value));
         } else {
             criteria.andLike(type, "%" + value + "%");
@@ -183,18 +195,22 @@ public abstract class BaseService<T> {
     }
 
     /**
-     * 限定查询参数(ID型)获取实例总数
+     * 根据字段(ID列表)获取实例总数
      *
-     * @param type  查询类别
-     * @param value 查询参数(ID型)
+     * @param type  字段
+     * @param ids ID列表
      * @return 实例总数
      */
-    public int getCount(String type, List<Long> value) {
-        Example example = new Example(getActualClass());
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andIn(type, value);
-        int count = mapper.selectCountByExample(example);
-        return count;
+    public int getCount(String type, List<Long> ids) {
+        if (ids.isEmpty()) {
+            return 0;
+        } else {
+            Example example = new Example(getActualClass());
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andIn(type, ids);
+            int count = mapper.selectCountByExample(example);
+            return count;
+        }
     }
 
     /**
@@ -210,7 +226,7 @@ public abstract class BaseService<T> {
     /**
      * 提取对象列表中所有特定ID字段列表
      *
-     * @param list   对象列表
+     * @param list  对象列表
      * @param filed 私有字段名
      * @return 所有特定ID字段列表
      * @throws Exception 反射异常

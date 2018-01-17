@@ -54,8 +54,8 @@ public class PointRecordController extends BaseController<PointRecord> {
         } else {
             userList = userService.selectAll(type, value);
             userIds = userService.getIds(userList);
-            list = getService().selectAll("userId", userIds, page);
-            count = getService().getCount("userId", userIds);
+            list = getService().selectAll("userid", userIds, page);
+            count = getService().getCount("userid", userIds);
         }
         return ResponseEntity
                 .ok(new PointRecordController.NestedPaginatedResult()
