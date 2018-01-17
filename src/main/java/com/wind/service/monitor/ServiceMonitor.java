@@ -37,7 +37,7 @@ public class ServiceMonitor {
         Object[] args = joinPoint.getArgs();
         Signature signature = joinPoint.getSignature();
         log.error("[" + signature.toShortString() + "]" + Arrays.toString(args) + "[" + e.toString() + "]");
-
+        e.printStackTrace();
         // Throw a new server internal error exception
         throw new ServerInternalErrorException();
     }

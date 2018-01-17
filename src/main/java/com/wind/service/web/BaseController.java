@@ -2,28 +2,16 @@ package com.wind.service.web;
 
 import com.wind.service.common.PaginatedResult;
 import com.wind.service.exception.ResourceNotFoundException;
-import com.wind.service.mybatis.pojo.UserTicket;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 
 public class BaseController<T> {
-    /**
-     * Custom Service
-     */
-    BaseService<T> service;
 
-    protected void setService(BaseService<T> service) {
-        this.service = service;
-    }
-
-    protected BaseService<T> getService() {
-        return service;
-    }
+    @Autowired
+    protected BaseService<T> service;
 
     @ApiOperation(value = "分页查询实例")
     @GetMapping("/all/{page}")
@@ -34,15 +22,15 @@ public class BaseController<T> {
         if ("".equals(type)) {
             return ResponseEntity
                     .ok(new PaginatedResult()
-                            .setData(getService().selectAll(page))
+                            .setData(service.selectAll(page))
                             .setCurrentPage(page)
-                            .setCount(getService().getCount()));
+                            .setCount(service.getCount()));
         } else {
             return ResponseEntity
                     .ok(new PaginatedResult()
-                            .setData(getService().selectAll(type, value, page))
+                            .setData(service.selectAll(type, value, page))
                             .setCurrentPage(page)
-                            .setCount(getService().getCount(type, value)));
+                            .setCount(service.getCount(type, value)));
         }
     }
 
