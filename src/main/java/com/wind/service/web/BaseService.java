@@ -251,6 +251,11 @@ public abstract class BaseService<T> {
     }
 
     @Transactional
+    public int add(List<T> list) {
+        return mapper.insertList(list);
+    }
+
+    @Transactional
     public boolean modifyById(T T) {
         return mapper.updateByPrimaryKey(T) > 0;
     }
@@ -258,5 +263,11 @@ public abstract class BaseService<T> {
     @Transactional
     public boolean deleteById(Long id) {
         return mapper.deleteByPrimaryKey(id) > 0;
+    }
+
+    @Transactional
+    public boolean deleteAll() {
+        Example example = new Example(getActualClass());
+        return mapper.deleteByExample(example) > 0;
     }
 }

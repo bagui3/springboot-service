@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 public class BaseController<T> {
 
     @Autowired
@@ -51,6 +53,13 @@ public class BaseController<T> {
         return ResponseEntity.accepted().body(instance);
     }
 
+    @ApiOperation(value = "新增多个实例")
+    @PostMapping("/list")
+    public ResponseEntity<?> post(@RequestBody List<T> list) {
+        int count = service.add(list);
+        return ResponseEntity.accepted().body(count);
+    }
+
     @ApiOperation(value = "根据ID修改实例")
     @PutMapping
     public ResponseEntity<?> put(@RequestBody T instance) {
@@ -63,8 +72,18 @@ public class BaseController<T> {
 
     @ApiOperation(value = "根据ID删除实例")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUserTicket(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean result = service.deleteById(id);
+        if (result)
+            return ResponseEntity.accepted().build();
+        else
+            return ResponseEntity.notFound().build();
+    }
+
+    @ApiOperation(value = "删除所有实例")
+    @DeleteMapping("/all")
+    public ResponseEntity<?> deleteAll() {
+        boolean result = service.deleteAll();
         if (result)
             return ResponseEntity.accepted().build();
         else
