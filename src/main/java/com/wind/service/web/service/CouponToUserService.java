@@ -8,9 +8,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CouponToUserService  extends BaseService<CouponToUser> {
-
-    @Autowired
-    public void setBaseMapper(CouponToUserMapper mapper) {
-        setMapper(mapper);
-    }
 }

@@ -8,9 +8,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PointRecordService  extends BaseService<PointRecord> {
-
-    @Autowired
-    public void setBaseMapper(PointRecordMapper mapper) {
-        setMapper(mapper);
-    }
 }

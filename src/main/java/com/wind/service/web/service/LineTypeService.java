@@ -8,9 +8,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LineTypeService extends BaseService<LineType> {
-
-    @Autowired
-    public void setBaseMapper(LineTypeMapper mapper) {
-        setMapper(mapper);
-    }
 }

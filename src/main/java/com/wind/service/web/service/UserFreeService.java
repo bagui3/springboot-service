@@ -8,9 +8,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserFreeService extends BaseService<UserFree> {
-
-    @Autowired
-    public void setBaseMapper(UserFreeMapper mapper) {
-        setMapper(mapper);
-    }
 }

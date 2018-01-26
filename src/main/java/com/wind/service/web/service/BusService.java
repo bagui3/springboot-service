@@ -8,9 +8,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class BusService extends BaseService<Bus> {
-
-    @Autowired
-    public void setBaseMapper(BusMapper mapper) {
-        setMapper(mapper);
-    }
 }

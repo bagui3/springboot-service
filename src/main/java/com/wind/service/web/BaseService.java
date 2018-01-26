@@ -3,6 +3,7 @@ package com.wind.service.web;
 import com.github.pagehelper.PageHelper;
 import com.wind.service.common.Constant;
 import com.wind.service.mybatis.CustomMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
@@ -14,18 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class BaseService<T> {
-    /**
-     * DAO Mapper
-     */
-    CustomMapper<T> mapper;
 
-    protected void setMapper(CustomMapper<T> mapper) {
-        this.mapper = mapper;
-    }
-
-    protected CustomMapper<T> getMapper() {
-        return mapper;
-    }
+    @Autowired
+    protected CustomMapper<T> mapper;
 
     /**
      * 获取真实反射类型
